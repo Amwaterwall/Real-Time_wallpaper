@@ -20,19 +20,18 @@ List the technologies and frameworks used in your project.
 
 ## Setup and Installation
 
+!!!
 Due to a private API key used, 
 Please download it to your local repository and open a live server to test it locally.
-
-Note:
-I will later set up the JSON file and yml file,
-so mac users can use Plash to display wallpaper on Plash.
 
 ```bash
 # Clone the repository
 git clone https://github.com/Amwaterwall/Real-Time_wallpaper.git
 
 Usage
-...
+
+I will later set up the JSON file and yml file for the GitHub page (for hiding the API key), 
+so Mac users can use Plash to display wallpaper on Plash.
 
 Features
 Display SpongeBob's Bikini beach with light effects depending on your local time and display the local weather information. 
