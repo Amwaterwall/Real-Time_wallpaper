@@ -4,7 +4,8 @@
   "description": "A dynamic real-time wallpaper.",
   "main": "index.html",
   "scripts": {
-    "deploy": "echo \"Deploying...\""
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "deploy": "npm run build && rsync -avz dist/ Amwaterwall@github.com:/Amwaterwall/Real-Time_wallpaper"
   },
   "repository": {
     "type": "git",
