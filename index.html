@@ -1,0 +1,503 @@
+<html>
+  <head>
+    <style>
+      html, body { 
+        background-color: #074cb3;
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        overflow: hidden !important;  
+      }
+    </style>
+
+    <script src="https://mrdoob.github.io/stats.js/build/stats.min.js"></script>
+    <script src="https://unpkg.com/three@latest/build/three.module.js"></script>
+    <script src="https://unpkg.com/three@latest/examples/jsm/loaders/GLTFLoader.js"></script>
+    <script src="https://unpkg.com/three@latest/examples/jsm/controls/OrbitControls.js"></script>
+
+    <script async src="https://unpkg.com/es-module-shims@1.6.3/dist/es-module-shims.js"></script>
+
+    <!-- sketchfab -->
+    <script type="text/javascript" src="https://static.sketchfab.com/api/sketchfab-viewer-1.12.1.js"></script>
+
+    <script type="importmap">
+        {
+          "imports": {
+            "three": "https://unpkg.com/three@latest/build/three.module.js",
+            "three/addons/": "https://unpkg.com/three@latest/examples/jsm/"
+          }
+        }
+    </script>
+
+    <script type="module">
+
+      import * as THREE from 'https://unpkg.com/three@latest/build/three.module.js';
+      import { OrbitControls } from 'https://unpkg.com/three@latest/examples/jsm/controls/OrbitControls.js';
+      import { GLTFLoader } from 'https://unpkg.com/three@latest/examples/jsm/loaders/GLTFLoader.js';
+      
+      var renderer, controls, scene, camera, stats, sphere;
+      let ambientLight, light;
+      var mesh;
+
+      const apiKey = '26adbcc2e6074f0bad833724230712'; // Replace with your WeatherAPI key
+      let location = 'Boston'; // let can be replace
+
+      /////////////// Current time ////////////////
+      const currentDate = new Date();
+      const hrs = currentDate.getHours();
+      const mins = currentDate.getMinutes();
+      const secs = currentDate.getSeconds();
+
+      // console.log(`Current Local Time: ${hrs}:${mins}:${secs}`);
+
+      window.onload = function () {
+        // Three.js code goes here
+        window.THREE = THREE
+        scene = new THREE.Scene();
+        
+        // Set up the camera
+        var fov = 75;
+        var ratio = window.innerWidth / window.innerHeight;
+        var zNear = 1;
+        var zFar = 10000;
+        camera = new THREE.PerspectiveCamera(fov, ratio, zNear, zFar);
+        camera.position.set(10, 12, 95);
+
+        // Create renderer and canvas
+        renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
+
+        // Stats widget
+        stats = new Stats();
+        document.body.appendChild(stats.domElement);
+
+        // Configure light
+        ambientLight = new THREE.AmbientLight();
+        scene.add(ambientLight);
+
+        light = new THREE.DirectionalLight(0xffffff, 7.0);
+        light.position.set(0, 20, 20);
+        scene.add(light);
+
+        // skybox
+        var geometry = new THREE.SphereGeometry( 400, 60, 40 );
+
+        var texture = new THREE.TextureLoader().load( 'source/skybox.jpeg' );
+        var material = new THREE.MeshBasicMaterial( { map: texture,
+                                                      side: THREE.BackSide } );
+        mesh = new THREE.Mesh( geometry, material );
+        scene.add( mesh );
+
+
+
+        // Check if the Geolocation API is available
+        if (navigator.geolocation) {
+          // Use the Geolocation API to get the user's location
+          navigator.geolocation.getCurrentPosition(
+            position => {
+              // Use the obtained coordinates to reverse geocode and get the city
+              const { latitude, longitude } = position.coords;
+              reverseGeocode(latitude, longitude);
+            },
+            error => {
+              console.error('Error getting user location:', error);
+            }
+          );
+        } else {
+          console.error('Geolocation is not supported by this browser.');
+        }
+
+        // Function to reverse geocode and get the city
+        function reverseGeocode(latitude, longitude) {
+          // Construct the reverse geocoding API URL
+          const reverseGeocodeUrl = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`;
+
+          // Make a GET request
+          fetch(reverseGeocodeUrl)
+            .then(response => response.json())
+            .then(data => {
+              // Access the city information from the response
+              const city = data.address.city || data.address.town || data.address.village || data.address.hamlet || '';
+      
+              // Update the location variable
+              location = city;
+
+              // Output the obtained location
+              console.log('User Location:', location);
+
+            })
+            .catch(error => {
+              console.error('Error fetching reverse geocoding data:', error);
+            });
+        }
+
+        // Construct the API URL
+        let apiUrl = `https://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${location}`;
+
+
+        // Load OBJ models
+        var loader1 = new GLTFLoader();
+        loader1.load('source/House1.glb', function ( gltf ) {
+            var object = gltf.scene;
+            object.scale.set(16, 16, 16);
+            object.position.set(-7, -17, -10);
+            object.rotation.y = 20; 
+            object.rotation.x = 19;
+            // object.rotation.x = THREE.MathUtils.degToRd(10);
+            // object.rotation.y = THREE.MathUtils.degToRd(10);
+            scene.add(object);
+            console.log('loader1 loaded');
+        });
+
+        var loader2 = new GLTFLoader();
+        loader2.load('source/spongebob.glb', function ( gltf ) {
+            var object = gltf.scene;
+            object.scale.set(2, 2, 2);
+            object.position.set(47, -16.5, -5);
+
+            object.rotation.x = THREE.MathUtils.degToRad(10);
+            object.rotation.y = THREE.MathUtils.degToRad(-50);
+            scene.add(object);
+            console.log('loader2 loaded');
+        });
+
+        var loader3 = new GLTFLoader();
+        loader3.load('source/fish.glb', function ( gltf ) {
+            var fish = gltf.scene.clone();
+            var fish2 = gltf.scene.clone();
+
+            fish.scale.set(12, 12, 12);
+            fish.position.set(100, 25, 20);
+            fish.rotation.y = THREE.MathUtils.degToRad(95);
+            scene.add(fish);
+
+            fish2.scale.set(10, 10, 10);
+            fish2.position.set(-150, -5, 20);
+            fish2.rotation.y = THREE.MathUtils.degToRad(-85);
+            scene.add(fish2);
+            console.log('loader3 loaded');
+
+            // parameters
+            const fishSpeed = 0.2;
+            const fishSpeed2 = 0.1;
+
+            // Animation function
+            function animateFish() {
+              const time = performance.now() * 0.001;
+
+              // Fish 1 (right to left)
+              fish.position.x -= fishSpeed;
+              if (fish.position.x < -120) {
+                fish.position.x = 120; // Reset position to the right
+              }
+
+              // Fish 2 (left to right)
+              fish2.position.x += fishSpeed2;
+              if (fish2.position.x > 120) {
+                fish2.position.x = -120; // Reset position to the left
+              }
+
+              requestAnimationFrame(animateFish);
+            }
+            animateFish();
+        });
+
+
+        var loader4 = new GLTFLoader();
+        loader4.load('source/shark.glb', function ( gltf ) {
+            var object = gltf.scene;
+            object.scale.set(25, 25, 25);
+            object.position.set(-250, 65, -60);
+            object.rotation.x = THREE.MathUtils.degToRad(10);
+            object.rotation.y = THREE.MathUtils.degToRad(-85);
+            scene.add(object);
+            console.log('loader4 loaded');
+
+            const sharkSpeed = 0.5;
+            function animateShark() {
+              const time = performance.now() * 0.001;
+
+              object.position.x += sharkSpeed;
+              if (object.position.x > 300) {
+                object.position.x = -300; // Reset position
+              }
+              requestAnimationFrame(animateShark);
+            }
+            animateShark();
+        });
+
+        var loader5 = new GLTFLoader();
+        loader5.load('source/crab.glb', function (gltf) {
+          var crab = gltf.scene.clone(); // Clone the crab
+
+          crab.scale.set(10, 10, 10);
+          crab.position.set(40, -20, 0); // Set initial position for the crab
+          crab.rotation.x = THREE.MathUtils.degToRad(-5);
+          crab.rotation.y = THREE.MathUtils.degToRad(-170);
+          scene.add(crab);
+
+          console.log('loader5 loaded');
+
+          // Animation parameters
+          const crabSpeed = 0.1;
+          let moveDirection = 1; // 1 for right, -1 for left
+          let waitingTime = 1;
+          // Animation function for crab movement
+          function animateCrab() {
+            const time = performance.now() * 0.001; // Convert to seconds
+
+            // Update the crab's position continuously
+            crab.position.x += crabSpeed * moveDirection;
+
+            // Check if the crab has reached the right or left edge
+            if (crab.position.x > 80 || crab.position.x < -50) {
+              waitingTime = Math.random() * 3 + 2; // Enter waiting state
+              moveDirection *= -1; // Reverse the direction after waiting
+            }
+
+            // Check if the crab is in the waiting state
+            if (waitingTime > 1) {
+              waitingTime -= time;
+            }
+
+            requestAnimationFrame(animateCrab);
+          }
+
+          // Start the crab animation
+          animateCrab();
+        });
+
+        var loader6 = new GLTFLoader();
+        loader6.load('source/turtle.glb', function ( gltf ) {
+            var object = gltf.scene;
+            object.scale.set(10, 10, 10);
+            object.position.set(150, 40, -20);
+            object.rotation.x = THREE.MathUtils.degToRad(25);
+            object.rotation.y = THREE.MathUtils.degToRad(100);
+            scene.add(object);
+            console.log('loader6 loaded');
+
+            // turtle speed
+            const speed = 0.1;
+
+            // Animation function
+            function animateturtle() {
+              const time = performance.now() * 0.001;
+
+              // turtle
+              object.position.x -= speed;
+              if (object.position.x < -200) {
+                object.position.x = 150; // Reset position to the right
+              }
+
+              requestAnimationFrame(animateturtle);
+            }
+            animateturtle();
+        });
+
+        var loader7 = new GLTFLoader();
+        loader2.load('source/patrick.glb', function ( gltf ) {
+            var object = gltf.scene;
+            object.scale.set(3, 3, 3);
+            object.position.set(-55, -12, -20);
+            object.rotation.x = THREE.MathUtils.degToRad(40);
+            object.rotation.y = THREE.MathUtils.degToRad(-170);
+            scene.add(object);
+            console.log('loader2 loaded');
+        });
+
+        // update lighting based on local time
+        function updateLighting() {
+          const currentDate = new Date();
+          const hrs = currentDate.getHours();
+
+          if (hrs >= 5 && hrs < 7) {
+            // Sunrise: Transition from night to day
+            const t = (hrs - 5) / 2; // Linear transition 
+            ambientLight.color.set(lerpColor(0x333333, 0xFFDAB9, t)); // Night to Day transition
+            light.intensity = lerp(0.5, 3.0, t); // Night to Day transition
+            mesh.material.color.set(lerpColor(0x444444, 0xFFDAB9, t)); // Night to Day transition
+
+            // particle material change
+            particleMaterial.color.set(lerpColor(0x444444, 0xFFDAB9, t));
+          } else if (hrs >= 7 && hrs < 17) {
+            // Daylight
+            ambientLight.color.set(0xffffff);
+            light.intensity = 3.0;
+            mesh.material.color.set(0xffffff);
+            // particle material change
+            particleMaterial.color.set(0xffffff);
+          } else if (hrs >= 17 && hrs < 19) {
+            // Sunset: Transition from day to night
+            const t = (hrs - 17) / 2; // Linear transition 
+            ambientLight.color.set(lerpColor(0xffffff, 0xFFDAB9, t)); // Day to Night transition
+            light.intensity = lerp(0.5, 0.5, t); // Day to Night transition
+            mesh.material.color.set(lerpColor(0xffffff, 0xFFDAB9, t)); // Day to Night transition
+
+            // particle material change
+            particleMaterial.color.set(lerpColor(0xffffff, 0xFFDAB9, t));
+          } else {
+            // Night
+            ambientLight.color.set(0x333333);
+            light.intensity = 0.5;
+            mesh.material.color.set(0x444444);
+
+            // particle material change
+            particleMaterial.color.set(0x444444);
+          }
+        }
+
+        // Linear interpolation function
+        function lerp(start, end, t) {
+          return start * (1 - t) + end * t;
+        }
+
+        // Color interpolation function
+        function lerpColor(start, end, t) {
+          const r = lerp((start >> 16) & 0xff, (end >> 16) & 0xff, t);
+          const g = lerp((start >> 8) & 0xff, (end >> 8) & 0xff, t);
+          const b = lerp(start & 0xff, end & 0xff, t);
+          return (r << 16) | (g << 8) | b;
+        }
+
+        // //////////////Particles
+        const particleGeometry = new THREE.BufferGeometry();
+        const sceneWidth = window.innerWidth; 
+        const sceneHeight = window.innerHeight;
+        const sceneDepth = 300; 
+        const particleCount = 250;
+        const speed = 0.3;
+        const positions = new Float32Array(particleCount * 3);
+        const lifetimes = new Float32Array(particleCount);
+
+        // Function to initialize a particle's position and lifetime
+        function initParticle(index) {
+          const radius = Math.random() * 10;
+          const theta = Math.random() * Math.PI * 2;
+
+          const x = Math.random() * sceneWidth - sceneWidth / 2; // Random x position along the bottom
+          const y = Math.random() * sceneHeight - sceneHeight / 2;
+          const z = Math.random() * sceneDepth - sceneDepth / 2;
+
+          positions[index * 3] = x;
+          positions[index * 3 + 1] = y;
+          positions[index * 3 + 2] = z;
+
+          // Assign a random lifetime to the particle
+          lifetimes[index] = Math.random() * 20;  
+        }
+
+        // Fill the positions array with initial values
+        for (let i = 0; i < particleCount; i++) {
+          initParticle(i);  
+        }
+
+        particleGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+        // Create a particle material
+        const particleMaterial = new THREE.PointsMaterial({
+          size: 3.0,
+          color: 0xFFFFFF,
+          blending: THREE.AdditiveBlending,
+          transparent: true,
+          depthTest: false,
+          //map: particleTexture,
+          blending: THREE.AdditiveBlending,
+        });
+        // Create the particle system
+        const particleSystem = new THREE.Points(particleGeometry, particleMaterial);
+
+        // Add the particle system to the scene
+        scene.add(particleSystem);
+
+        // Update function to animate the particles
+        function updateParticles(deltaTime) {
+          const positions = particleGeometry.attributes.position.array;
+
+          for (let i = 0; i < particleCount; i++) {
+            positions[i * 3 + 1] += speed; // Move particles upwards
+
+            // Check if the particle's lifetime is over
+            lifetimes[i] -= deltaTime;
+            if (lifetimes[i] < 0) {
+              // If so, reinitialize the particle at the bottom
+              initParticle(i);
+            }
+          }
+
+          // Notify Three.js that the buffer data changed
+          particleGeometry.attributes.position.needsUpdate = true;
+        }
+        // Add the updateParticles function to animation loop
+        let lastTime = performance.now();
+        /////////////////////////////////
+
+        ////////////// Weather http request /////////////////
+        // Make a GET request to the WeatherAPI
+        // Create HTML elements for weather information
+        const weatherContainer = document.createElement('div');
+        weatherContainer.style.position = 'absolute';
+        weatherContainer.style.top = '20px';
+        weatherContainer.style.right = '20px';
+        weatherContainer.style.color = 'rgba(255, 255, 255, 0.6)';
+        document.body.appendChild(weatherContainer);
+
+        // Function to update weather information
+        function updateWeatherInfo() {
+          fetch(apiUrl)
+            .then(response => response.json())
+            .then(data => {
+              const temperature = data.current.temp_c;
+              const condition = data.current.condition.text;
+              const humidity = data.current.humidity;
+              console.log(`Last Updated Time: ${hrs}:${mins}:${secs}`);
+              console.log('Weather Data:', data);
+
+              // Update HTML elements with weather information
+              weatherContainer.innerHTML = `
+                <p>Your Location: ${location}</p>
+                <p>Temperature: ${temperature}°C</p>
+                <p>Condition: ${condition}</p>
+                <p>Humidity: ${humidity}%</p>
+      `       ;
+              console.log('weatherAPI called');
+            })
+            .catch(error => {
+              console.error('Error fetching weather data:', error);
+            });
+        }
+
+        // Initial update
+        updateWeatherInfo();
+
+        // Update weather information every hour
+        setInterval(updateWeatherInfo, 60 * 60 * 1000);
+        /////////////////////////////////////////
+
+        // Interaction
+        controls = new OrbitControls(camera, renderer.domElement);
+
+        function animate() {
+          requestAnimationFrame(animate);
+          mesh.rotation.y += 0.001;
+          stats.update();
+          controls.update();
+
+          // Calculate the time difference
+          const currentTime = performance.now();
+          const deltaTime = (currentTime - lastTime) / 1000; // seconds
+
+          updateParticles(deltaTime);
+          renderer.render(scene, camera);
+          updateLighting();
+          lastTime = currentTime;
+        }
+        // Call animation
+        animate();
+      }
+      
+    </script>
+  </head>
+  <body>
+  </body>
+</html>
