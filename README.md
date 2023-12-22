@@ -23,6 +23,7 @@ List the technologies and frameworks used in your project.
 !!!
 Due to a private API key used, 
 Please download it to your local repository and open a live server to test it locally.
+(I used the vs code extension live server)
 
 ```bash
 # Clone the repository
@@ -32,6 +33,7 @@ Usage
 
 I will later set up the JSON file and yml file for the GitHub page (for hiding the API key), 
 so Mac users can use Plash to display wallpaper on Plash.
+(Plash seems to only support a single index.html file, might have to look for another platform.)
 
 Features
 Display SpongeBob's Bikini beach with light effects depending on your local time and display the local weather information. 
