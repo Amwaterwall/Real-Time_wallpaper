@@ -23,6 +23,7 @@ List the technologies and frameworks used in your project.
 !!!
 Due to a private API key used, 
 Please download it to your local repository and open a live server to test it locally.
+(I used the vs code extension live server)
 
 ```bash
 # Clone the repository
@@ -32,6 +33,7 @@ Usage
 
 I will later set up the JSON file and yml file for the GitHub page (for hiding the API key), 
 so Mac users can use Plash to display wallpaper on Plash.
+(Plash seems to only support a single index.html file, might have to look for another platform.)
 
 Features
 Display SpongeBob's Bikini beach with light effects depending on your local time and display the local weather information. 
@@ -48,6 +50,14 @@ List and acknowledge any third-party assets, libraries, or resources used in you
 [Low poly Fish pack Ocean animals: Author dubyk] https://www.cgtrader.com/3d-models/animals/fish/low-poly-fish-pack-ocean-animals
 [Spongebobs Housez: Author obsecrostudio] https://www.cgtrader.com/3d-models/character/fantasy-character/spongebobs-house
 [Spongebob Squarepants: Author cgscalrod] https://www.cgtrader.com/3d-models/character/fantasy-character/spongebob-squarepants-b5d121d4-39dc-45cb-8c76-466d7141fb58
+
+Some reference sites:
+https://stackoverflow.com/questions/10211145/getting-current-date-and-time-in-javascript
+https://stackoverflow.com/questions/66245245/how-store-latitude-and-longitude-from-navigator-geolocation-getcurrentposition
+https://stackoverflow.com/questions/55730280/refresh-the-page-after-user-allowing-location
+https://stackoverflow.com/questions/62070364/how-to-make-a-lerpcolor-function-without-processingjs
+https://stackoverflow.com/questions/5837572/generate-a-random-point-within-a-circle-uniformly
+https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/random
 
 License
 
