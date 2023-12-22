@@ -23,6 +23,10 @@ List the technologies and frameworks used in your project.
 Due to a private API key used, 
 Please download it to your local repository and open a live server to test it locally.
 
+Note:
+I will later set up the JSON file and yml file,
+so mac users can use Plash to display wallpaper on Plash.
+
 ```bash
 # Clone the repository
 git clone https://github.com/Amwaterwall/Real-Time_wallpaper.git
