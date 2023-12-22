@@ -51,6 +51,14 @@ List and acknowledge any third-party assets, libraries, or resources used in you
 [Spongebobs Housez: Author obsecrostudio] https://www.cgtrader.com/3d-models/character/fantasy-character/spongebobs-house
 [Spongebob Squarepants: Author cgscalrod] https://www.cgtrader.com/3d-models/character/fantasy-character/spongebob-squarepants-b5d121d4-39dc-45cb-8c76-466d7141fb58
 
+Some reference sites:
+https://stackoverflow.com/questions/10211145/getting-current-date-and-time-in-javascript
+https://stackoverflow.com/questions/66245245/how-store-latitude-and-longitude-from-navigator-geolocation-getcurrentposition
+https://stackoverflow.com/questions/55730280/refresh-the-page-after-user-allowing-location
+https://stackoverflow.com/questions/62070364/how-to-make-a-lerpcolor-function-without-processingjs
+https://stackoverflow.com/questions/5837572/generate-a-random-point-within-a-circle-uniformly
+https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/random
+
 License
 
 MIT License
