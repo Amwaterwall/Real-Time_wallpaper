@@ -1,0 +1,22 @@
+{
+  "name": "yes",
+  "version": "1.0.0",
+  "description": "A dynamic real-time wallpaper.",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Amwaterwall/Real-Time_wallpaper.git"
+  },
+  "keywords": [
+    "Wallpaper"
+  ],
+  "author": "Eric Yan",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Amwaterwall/Real-Time_wallpaper/issues"
+  },
+  "homepage": "https://github.com/Amwaterwall/Real-Time_wallpaper#readme"
+}
