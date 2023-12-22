@@ -6,6 +6,7 @@
   "scripts": {
     "deploy": "npm run build && rsync -avz dist/ Amwaterwall@github.com:/Amwaterwall/Real-Time_wallpaper"
   },
+  
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Amwaterwall/Real-Time_wallpaper.git"
