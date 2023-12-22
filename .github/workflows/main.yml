@@ -20,11 +20,14 @@ jobs:
 
       - name: Install Dependencies
         run: npm install
+        working-directory: Amwaterwall/Real-Time_wallpaper
 
       - name: Run Tests
         run: npm test
+        working-directory: Amwaterwall/Real-Time_wallpaper
 
       - name: Deploy
         run: npm run deploy -- API_KEY=${{ secrets.WEATHERAPI }}
         env:
           NODE_ENV: production
+        working-directory: Amwaterwall/Real-Time_wallpaper
