@@ -4,9 +4,9 @@
   "description": "A dynamic real-time wallpaper.",
   "main": "index.html",
   "scripts": {
-    "deploy": "npm run build && rsync -avz dist/ Amwaterwall@github.com:/Amwaterwall/Real-Time_wallpaper"
+    "deploy": "npm run build && rsync -avz dist/ "
   },
-  
+
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Amwaterwall/Real-Time_wallpaper.git"
